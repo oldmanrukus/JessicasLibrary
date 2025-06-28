@@ -1,0 +1,32 @@
+﻿@page
+@model JessicasLibrary.Pages.OptionsModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@{
+    ViewData["Title"] = "Your Account Options";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="FirstName" class="form-label">First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="LastName" class="form-label">Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Password" class="form-label">New Password</label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>

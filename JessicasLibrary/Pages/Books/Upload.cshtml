@@ -1,0 +1,35 @@
+﻿@page
+@model JessicasLibrary.Pages.Books.UploadModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@{
+    ViewData["Title"] = "Upload a New Book";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label asp-for="Title" class="form-label">Book Title</label>
+    <input asp-for="Title" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label asp-for="Genre" class="form-label">Genre</label>
+    <input asp-for="Genre" class="form-control" placeholder="e.g. Fiction, Sci-Fi" required />
+  </div>
+  <div class="mb-3">
+    <label asp-for="DocFile" class="form-label">DOCX File</label>
+    <input asp-for="DocFile" type="file" accept=".docx" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label asp-for="CoverFile" class="form-label">Cover Image (PNG)</label>
+    <input asp-for="CoverFile" type="file" accept=".png" class="form-control" required />
+  </div>
+  <button type="submit" class="btn btn-primary">Upload</button>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+          <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+    }
+</form>

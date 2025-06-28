@@ -1,0 +1,47 @@
+﻿@page "{bookId}"
+@model JessicasLibrary.Pages.Admin.BookAccessModel
+@using Microsoft.AspNetCore.Authorization;
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+
+@{
+    ViewData["Title"] = "Manage Access – " + (Model.Metadata?.Title ?? "");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.Metadata == null)
+{
+        <div class="alert alert-danger">Book not found.</div>
+}
+else
+{
+        <form method="post">
+            <input type="hidden" asp-for="BookId" />
+
+            <div class="form-check mb-3">
+                <input asp-for="Metadata.IsPublic" class="form-check-input" />
+                <label asp-for="Metadata.IsPublic" class="form-check-label">
+                    Available to <strong>All</strong> users
+                </label>
+            </div>
+
+            <fieldset class="mb-4">
+                <legend>Grant to specific users</legend>
+            @foreach (var u in Model.AllUsers)
+            {
+                bool allowed = Model.Metadata.AllowedUserIds.Contains(u.Id);
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="SelectedUserIds"
+                                   value="@u.Id"
+                    @(allowed ? "checked" : "") />
+                            <label class="form-check-label">@u.Email</label>
+                        </div>
+            }
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary">Save Access</button>
+            <a asp-page="/Admin/Books" class="btn btn-link">← Back to Manage Books</a>
+        </form>
+}

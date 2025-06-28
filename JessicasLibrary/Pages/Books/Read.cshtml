@@ -1,0 +1,59 @@
+﻿@page "{bookId}/{pageNumber:int?}"
+@model JessicasLibrary.Pages.Books.ReadModel
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+@{
+    ViewData["Title"] = Model.BookTitle ?? "Reading";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@Model.BookTitle</h2>
+
+    @if (Model.IsAudioAvailable)
+    {
+        <audio controls
+               preload="metadata"
+               style="max-width:300px;"
+               src="@Url.Page(
+                   "./Read",
+                   pageHandler: "Audio",
+                   values: new {
+                       bookId     = Model.BookId,
+                       pageNumber = Model.PageNumber
+                   })">
+            Your browser does not support the audio element.
+        </audio>
+    }
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        @Html.Raw(Model.Pages[Model.PageNumber - 1])
+    </div>
+</div>
+
+<nav>
+    <ul class="pagination">
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-page="./Read"
+               asp-route-bookId="@Model.BookId"
+               asp-route-pageNumber="@(Model.PageNumber - 1)">
+                ← Previous
+            </a>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">
+                Page @Model.PageNumber of @Model.TotalPages
+            </span>
+        </li>
+        <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-page="./Read"
+               asp-route-bookId="@Model.BookId"
+               asp-route-pageNumber="@(Model.PageNumber + 1)">
+                Next →
+            </a>
+        </li>
+    </ul>
+</nav>

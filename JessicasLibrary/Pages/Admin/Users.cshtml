@@ -1,0 +1,64 @@
+﻿@page
+@model JessicasLibrary.Pages.Admin.UsersModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Roles</th>
+            <th style="width:200px">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model.Users)
+        {
+            <tr>
+                <td>@u.Email</td>
+                <td>@string.Join(", ", Model.UserRoles[u.Id] ?? new List<string>())</td>
+                <td>
+                    @* Promote to Admin *@
+                    @if (!Model.UserRoles[u.Id].Contains("Admin"))
+                    {
+                            <form method="post"
+                                  asp-page-handler="Promote"
+                                  asp-route-userId="@u.Id"
+                                  class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    Make Admin
+                                </button>
+                            </form>
+                    }
+                    else
+                    {
+                            <form method="post"
+                                  asp-page-handler="Demote"
+                                  asp-route-userId="@u.Id"
+                                  class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    Remove Admin
+                                </button>
+                            </form>
+                    }
+                    @* Optional: delete if you want *@
+                    <form method="post"
+                          asp-page-handler="Delete"
+                          asp-route-userId="@u.Id"
+                          onsubmit="return confirm('Delete user &quot;'+@u.Email+'&quot;?');"
+                          class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

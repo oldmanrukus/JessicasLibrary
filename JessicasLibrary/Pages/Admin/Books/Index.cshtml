@@ -1,0 +1,113 @@
+﻿@page
+@model JessicasLibrary.Pages.Admin.Books.IndexModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@{
+    ViewData["Title"] = "Manage Books";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+        <div class="alert alert-success">@Model.SuccessMessage</div>
+}
+
+<h4>Upload New Book</h4>
+<form method="post" asp-page-handler="Upload" enctype="multipart/form-data" class="mb-5">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-control" required />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Genre" class="form-label">Genre</label>
+            <input asp-for="Genre" class="form-control" required />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Description" class="form-label">Description</label>
+            <input asp-for="Description" class="form-control" />
+        </div>
+        <div class="col-md-6">
+            <label asp-for="DocFile" class="form-label">DOCX File</label>
+            <input asp-for="DocFile" type="file" accept=".docx" class="form-control" required />
+        </div>
+        <div class="col-md-6">
+            <label asp-for="CoverFile" class="form-label">Cover Image (PNG)</label>
+            <input asp-for="CoverFile" type="file" accept=".png" class="form-control" required />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Upload Book</button>
+</form>
+
+<hr />
+
+<h4>Existing Books</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Genre</th>
+            <th>Pages</th>
+            <th>Access</th>
+            <th style="width:140px">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kv in Model.Books)
+        {
+            var id = kv.Key;
+            var m = kv.Value;
+                <tr>
+                    <td>
+                        <img src="@m.CoverUrl"
+                             alt="@m.Title"
+                             style="height:60px; object-fit:cover;" />
+                    </td>
+                    <td>@m.Title</td>
+                    <td>@m.Description</td>
+                    <td>@m.Genre</td>
+                    <td>@m.PageCount</td>
+                    <td>
+                    @if (m.IsPublic)
+                    {
+                                <span class="badge bg-success">All</span>
+                    }
+                    else
+                    {
+                                <span class="badge bg-secondary">
+                            @m.AllowedUserIds.Count users
+                                </span>
+                    }
+                        <a class="btn btn-sm btn-outline-primary ms-2"
+                           asp-page="/Admin/BookAccess"
+                           asp-route-bookId="@id">
+                            Edit
+                        </a>
+                    </td>
+                    <td class="d-flex gap-1">
+                        <a asp-page="./Edit"
+                           asp-route-bookId="@id"
+                           class="btn btn-sm btn-secondary">
+                            Edit Details
+                        </a>
+                        <form method="post" asp-page-handler="Delete" class="m-0">
+                            <input type="hidden" name="bookId" value="@id" />
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete &quot;@m.Title&quot;?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

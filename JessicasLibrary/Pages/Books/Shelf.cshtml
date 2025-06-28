@@ -1,0 +1,31 @@
+﻿@page
+@model JessicasLibrary.Pages.Books.ShelfModel
+@{
+    ViewData["Title"] = "My Book Shelf";
+}
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var kv in Model.Books)
+    {
+        var id = kv.Key;
+        var meta = kv.Value;
+        <div class="col">
+            <div class="card h-100">
+                <img src="@meta.CoverUrl"
+                     class="card-img-top"
+                     alt="@meta.Title" />
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@meta.Title</h5>
+                    <p class="card-text">@meta.Description</p>
+                    <p class="card-text"><strong>Genre:</strong> @meta.Genre</p>
+                    <p class="card-text"><strong>Pages:</strong> @meta.PageCount</p>
+                    <a asp-page="/Books/Read"
+                       asp-route-bookId="@id"
+                       class="btn btn-primary mt-auto">
+                        Read
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

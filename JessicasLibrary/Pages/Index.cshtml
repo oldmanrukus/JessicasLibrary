@@ -1,0 +1,13 @@
+﻿@page
+@model JessicasLibrary.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+<div class="jumbotron">
+    <h1>Welcome to Jessica's' Book Library</h1>
+    <p class="lead">.</p>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <p><a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Login">Sign In to Continue</a></p>
+    }
+</div>

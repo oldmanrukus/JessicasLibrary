@@ -1,0 +1,24 @@
+﻿@page "{bookId}"
+@model JessicasLibrary.Pages.Admin.Books.EditModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@{
+    ViewData["Title"] = "Edit Book Description";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" class="mb-4">
+    <input type="hidden" asp-for="BookId" />
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description"
+                  class="form-control"
+                  rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="./Index" class="btn btn-link">Cancel</a>
+</form>
